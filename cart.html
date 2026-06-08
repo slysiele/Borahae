@@ -1,393 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Cart — Borahae Store</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <head>
-        <meta charset="utf-8">
-        <title>Borahae_store_ke</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
-        <!-- Icon Font Stylesheet -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .cart-img { width:80px; height:80px; object-fit:cover; border-radius:50%; }
 
-        <!-- Libraries Stylesheet -->
-        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+        .qty-wrap { display:flex; align-items:center; gap:0; width:110px; }
+        .qty-wrap button {
+            width:30px; height:30px; border-radius:50%;
+            border:1px solid #dee2e6; background:#f8f9fa;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; flex-shrink:0;
+        }
+        .qty-wrap button:hover { background:#e2e6ea; }
+        .qty-wrap input {
+            width:40px; text-align:center; border:none;
+            font-weight:600; font-size:.95rem; background:transparent;
+        }
 
+        .cart-empty { text-align:center; padding:80px 20px; }
+        .cart-empty i { font-size:4rem; color:#ddd; display:block; margin-bottom:16px; }
 
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        .remove-btn {
+            width:36px; height:36px; border-radius:50%;
+            border:1px solid #dee2e6; background:#f8f9fa;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer;
+        }
+        .remove-btn:hover { background:#fee2e2; border-color:#fca5a5; }
 
-        <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
-    </head>
+        .summary-box { background:#f8f9fa; border-radius:12px; padding:28px; }
+        .summary-box .total-row { border-top:2px solid #dee2e6; border-bottom:2px solid #dee2e6; padding:16px 0; margin:16px 0; }
 
-    <body>
+        table thead th { border-bottom:2px solid #dee2e6; font-weight:600; color:#555; font-size:.88rem; text-transform:uppercase; letter-spacing:.04em; }
+        table td, table th { vertical-align:middle; padding:16px 12px; }
 
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
-        </div>
-        <!-- Spinner End -->
+        .price-pill {
+            display:inline-block; background:#fff3cd; border:1px solid #ffc107;
+            border-radius:20px; padding:2px 12px; font-weight:700; color:#7a5c00; font-size:.9rem;
+        }
 
+        #checkout-form { display:none; }
+        #checkout-form.show { display:block; }
+    </style>
+</head>
+<body>
 
-        <!-- Navbar start -->
-        <div class="container-fluid fixed-top">
-            <div class="container topbar bg-primary d-none d-lg-block">
-                <div class="d-flex justify-content-between">
-                    <div class="top-info ps-2">
-                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="https://l.instagram.com/?u=https%3A%2F%2Fwa.me%2Fmessage%2FXANKAIJYEJGMP1%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnmhFT6BDjj0kx4PQ7nqSTNlt5eF3x7N8wEe8g78HmPJI6V1zZQ8A1fSsxWmw_aem_jORejPiNiN5EhiS91pm-9w&e=AUBoyKJP_C3QWFHZBzKcaoPMd_JxpA-Ya_Kg9jvqJqu-u8WaRwA1zZUzToSRGr_gzuTAyd7F6ws7XZai4CyEDDk04xtIOtBkbU0izqyQaxYP24kIKRSa2txzHLwyJgzHTx83Ndg" class="text-white">Online store, Delivery Countrywide</a></small>
-                        <small class="me-3"><i class="fas fa-phone-alt me-2 text-secondary"></i><a href="https://l.instagram.com/?u=https%3A%2F%2Fwa.me%2Fmessage%2FXANKAIJYEJGMP1%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnmhFT6BDjj0kx4PQ7nqSTNlt5eF3x7N8wEe8g78HmPJI6V1zZQ8A1fSsxWmw_aem_jORejPiNiN5EhiS91pm-9w&e=AUBoyKJP_C3QWFHZBzKcaoPMd_JxpA-Ya_Kg9jvqJqu-u8WaRwA1zZUzToSRGr_gzuTAyd7F6ws7XZai4CyEDDk04xtIOtBkbU0izqyQaxYP24kIKRSa2txzHLwyJgzHTx83Ndg" class="text-white">+254705191550</a></small>
-                    </div>
-                    <div class="top-link pe-2">
-                        <a href="policy.html" class="text-white"><small class="text-white mx-2">Borahae Policy</small></a>
-                    </div>
-                </div>
+<!-- Spinner -->
+<div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-grow text-primary" role="status"></div>
+</div>
+
+<!-- Navbar -->
+<div class="container-fluid fixed-top">
+    <div class="container topbar bg-primary d-none d-lg-block">
+        <div class="d-flex justify-content-between">
+            <div class="top-info ps-2">
+                <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>
+                    <a href="https://wa.me/254705191550" class="text-white">Online store, Delivery Countrywide</a></small>
+                <small class="me-3"><i class="fas fa-phone-alt me-2 text-secondary"></i>
+                    <a href="tel:+254705191550" class="text-white">+254705191550</a></small>
             </div>
-            <div class="container px-0">
-                <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand"><img src="img/logo.jpg" alt="Logo" style="height: 40px;"></a>
-                    <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Borahae Store</h1></a>
-                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars text-primary"></span>
+            <div class="top-link pe-2">
+                <a href="policy.html" class="text-white"><small class="text-white mx-2">Borahae Policy</small></a>
+            </div>
+        </div>
+    </div>
+    <div class="container px-0">
+        <nav class="navbar navbar-light bg-white navbar-expand-xl">
+            <a href="index.html" class="navbar-brand"><img src="img/logo.jpg" alt="Logo" style="height:40px;"></a>
+            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Borahae Store</h1></a>
+            <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars text-primary"></span>
+            </button>
+            <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="shop.html" class="nav-item nav-link">Shop</a>
+                    <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                            <a href="cart.html" class="dropdown-item">Cart</a>
+                            <a href="chackout.html" class="dropdown-item">Checkout</a>
+                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                </div>
+                <div class="d-flex m-3 me-0">
+                    <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                        data-bs-toggle="modal" data-bs-target="#searchModal">
+                        <i class="fas fa-search text-primary"></i>
                     </button>
-                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                        <div class="navbar-nav mx-auto">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="shop-detail.html" class="nav-item nav-link">Shop Detail</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="cart.html" class="dropdown-item">Cart</a>
-                                    <a href="chackout.html" class="dropdown-item">Checkout</a>
-                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                    <!-- <a href="404.html" class="dropdown-item">404 Page</a> -->
-                                </div>
-                            </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        </div>
-                        <div class="d-flex m-3 me-0">
-                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                            <a href="cart.html" class="position-relative me-4 my-auto">
-                                <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                            </a>
-                            <a href="login.html" class="my-auto">
-                                <i class="fas fa-user fa-2x"></i>
-                            </a>
-                        </div>
-                    </div>
-                </nav>
+                    <a href="cart.html" class="position-relative me-4 my-auto">
+                        <i class="fa fa-shopping-bag fa-2x"></i>
+                        <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1 cart-count-badge"
+                            style="top:-5px;left:15px;height:20px;min-width:20px;">0</span>
+                    </a>
+                    <a href="login.html" class="my-auto"><i class="fas fa-user fa-2x"></i></a>
+                </div>
             </div>
-        </div>
-        <!-- Navbar End -->
+        </nav>
+    </div>
+</div>
 
-
-        <!-- Modal Search Start -->
-        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex align-items-center">
-                        <div class="input-group w-75 mx-auto d-flex">
-                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                        </div>
-                    </div>
+<!-- Modal Search -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content rounded-0">
+            <div class="modal-header">
+                <h5 class="modal-title">Search by keyword</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body d-flex align-items-center">
+                <div class="input-group w-75 mx-auto d-flex">
+                    <input type="search" class="form-control p-3" placeholder="e.g. mug, flask, tote…">
+                    <span class="input-group-text p-3"><i class="fa fa-search"></i></span>
                 </div>
             </div>
         </div>
-        <!-- Modal Search End -->
+    </div>
+</div>
 
+<!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Your Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
+</div>
 
-        <!-- Single Page Header start -->
-        <div class="container-fluid page-header py-5">
-            <h1 class="text-center text-white display-6">Cart</h1>
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                <li class="breadcrumb-item active text-white">Cart</li>
-            </ol>
+<!-- Cart Page -->
+<div class="container-fluid py-5">
+    <div class="container py-4">
+
+        <!-- Empty state -->
+        <div class="cart-empty d-none" id="cartEmpty">
+            <i class="fa fa-shopping-bag"></i>
+            <h4 class="mb-2">Your cart is empty</h4>
+            <p class="text-muted mb-4">Looks like you haven't added anything yet.</p>
+            <a href="shop.html" class="btn btn-primary rounded-pill px-5 py-2">Browse Shop</a>
         </div>
-        <!-- Single Page Header End -->
 
+        <!-- Cart table -->
+        <div id="cartContent">
+            <div class="table-responsive">
+                <table class="table align-middle" id="cartTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Name</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartBody"></tbody>
+                </table>
+            </div>
 
-        <!-- Cart Page Start -->
-        <div class="container-fluid py-5">
-            <div class="container py-5">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    <div class="d-flex align-items-center">
-                                        <img src="img/vegetable-item-3.png" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
-                                    </div>
-                                </th>
-                                <td>
-                                    <p class="mb-0 mt-4">Big Banana</p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
-                                            <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
-                                </td>
-                            
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="d-flex align-items-center">
-                                        <img src="img/vegetable-item-5.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
-                                    </div>
-                                </th>
-                                <td>
-                                    <p class="mb-0 mt-4">Potatoes</p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
-                                            <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="d-flex align-items-center">
-                                        <img src="img/vegetable-item-2.jpg" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
-                                    </div>
-                                </th>
-                                <td>
-                                    <p class="mb-0 mt-4">Awesome Brocoli</p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
-                                            <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">2.99 $</p>
-                                </td>
-                                <td>
-                                    <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-5">
-                    <input type="text" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Coupon Code">
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="button">Apply Coupon</button>
-                </div>
-                <div class="row g-4 justify-content-end">
-                    <div class="col-8"></div>
-                    <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                        <div class="bg-light rounded">
-                            <div class="p-4">
-                                <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
-                                <div class="d-flex justify-content-between mb-4">
-                                    <h5 class="mb-0 me-4">Subtotal:</h5>
-                                    <p class="mb-0">$96.00</p>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="mb-0 me-4">Shipping</h5>
-                                    <div class="">
-                                        <p class="mb-0">Flat rate: $3.00</p>
-                                    </div>
-                                </div>
-                                <p class="mb-0 text-end">Shipping to Ukraine.</p>
-                            </div>
-                            <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                                <h5 class="mb-0 ps-4 me-4">Total</h5>
-                                <p class="mb-0 pe-4">$99.00</p>
-                            </div>
-                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+            <!-- Continue shopping -->
+            <div class="d-flex justify-content-between align-items-center mt-2 mb-5 flex-wrap gap-3">
+                <a href="shop.html" class="btn border-secondary rounded-pill px-4 py-2 text-primary">
+                    <i class="fa fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+                <button class="btn border-secondary rounded-pill px-4 py-2 text-danger" id="clearCartBtn">
+                    <i class="fa fa-trash me-2"></i>Clear Cart
+                </button>
+            </div>
+
+            <!-- Summary + checkout form -->
+            <div class="row g-4 justify-content-end">
+                <div class="col-lg-5 col-xl-4">
+                    <div class="summary-box">
+                        <h4 class="fw-bold mb-4">Order Summary</h4>
+
+                        <div id="summaryLines"></div>
+
+                        <div class="total-row d-flex justify-content-between">
+                            <h5 class="mb-0 fw-bold">Total</h5>
+                            <h5 class="mb-0 text-primary fw-bold" id="summaryTotal">Ksh 0</h5>
                         </div>
+
+                        <p class="text-muted small mb-4">
+                            <i class="fas fa-truck me-1"></i>Delivery arranged after order — we'll call you to confirm.
+                        </p>
+
+                        <!-- Place order button -->
+                        <button class="btn btn-primary rounded-pill w-100 py-3 fw-semibold mb-3" id="proceedBtn">
+                            <i class="fa fa-shopping-bag me-2"></i>Proceed to Order
+                        </button>
+
+                        <a href="https://wa.me/254705191550" target="_blank"
+                            class="btn btn-success rounded-pill w-100 py-2 fw-semibold">
+                            <i class="fab fa-whatsapp me-2"></i>Order via WhatsApp
+                        </a>
+                    </div>
+
+                    <!-- Inline checkout form (shown on Proceed click) -->
+                    <div class="summary-box mt-4" id="checkout-form">
+                        <h5 class="fw-bold mb-4">Your Details</h5>
+
+                        <div id="checkout-success" class="alert alert-success d-none">
+                            <i class="fas fa-check-circle me-2"></i><strong>Order placed!</strong>
+                            We'll call you shortly to confirm delivery and payment. Thank you! 🎉
+                        </div>
+                        <div id="checkout-error" class="alert alert-danger d-none">
+                            <i class="fas fa-exclamation-circle me-2"></i>Something went wrong. Please WhatsApp us at +254705191550.
+                        </div>
+
+                        <div id="checkout-fields">
+                            <div class="mb-3">
+                                <input type="text" id="co-name" class="form-control border" placeholder="Full Name *">
+                            </div>
+                            <div class="mb-3">
+                                <input type="tel" id="co-phone" class="form-control border" placeholder="Phone Number * (e.g. 0712345678)">
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" id="co-email" class="form-control border" placeholder="Email Address (optional)">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" id="co-location" class="form-control border" placeholder="Town / Delivery Location *">
+                            </div>
+                            <div class="mb-4">
+                                <textarea id="co-notes" class="form-control border" rows="2"
+                                    placeholder="Branding details, special instructions… (optional)"></textarea>
+                            </div>
+                            <button class="btn btn-primary rounded-pill w-100 py-3 fw-semibold" id="submitOrderBtn">
+                                <span id="submitOrderText">Place Order</span>
+                                <span id="submitOrderSpinner" class="d-none">
+                                    <span class="spinner-border spinner-border-sm me-1"></span>Placing…
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /cartContent -->
+
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+    <div class="container py-5">
+        <div class="pb-4 mb-4" style="border-bottom:1px solid rgba(226,175,24,.5)">
+            <div class="row g-4">
+                <div class="col-lg-3">
+                    <a href="#"><h1 class="text-primary mb-0">Borahae</h1>
+                    <p class="text-secondary mb-0">Get your branded mugs & more today!</p></a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative mx-auto">
+                        <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="email" placeholder="Your Email">
+                        <button class="btn btn-primary border-0 py-3 px-4 position-absolute rounded-pill text-white" style="top:0;right:0;">Subscribe Now</button>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="d-flex justify-content-end pt-3">
+                        <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.instagram.com/borahae_store_ke/"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://wa.me/254705191550"><i class="fab fa-whatsapp"></i></a>
+                        <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.facebook.com/106423811606037"><i class="fab fa-facebook-f"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Cart Page End -->
-
-
-        <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
-            <div class="container py-5">
-                <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
-                    <div class="row g-4">
-                        <div class="col-lg-3">
-                            <a href="#">
-                                <h1 class="text-primary mb-0">Borahae</h1>
-                                <p class="text-secondary mb-0">Get your branded mugs & more today!</p>
-                            </a>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="position-relative mx-auto">
-                                <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
-                                <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="d-flex justify-content-end pt-3">
-                                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.instagram.com/borahae_store_ke/"><i class="fab fa-instagram"></i></a>
-                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://l.instagram.com/?u=https%3A%2F%2Fwa.me%2Fmessage%2FXANKAIJYEJGMP1%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGndDncAi1UlzbyJO0wi_1WuB96Xsi7pJvl6P42veSm8Oekc1d1xBrPTeC8Hyk_aem_dfhkeBLK4qmAJd19b-PE9g&e=AUBURF7BZ0fV-db9daKxXyVvj-54Z8xGjw29GW7_Sy20nZAIAvdBR_PLn-k88W1_V4iwjbl7e9VXc50QYIx-cw9AbT5lrksomnij1pWdk8jMKBLJ8YU3Q-x3YfvOJG1x2_IIsDE"><i class="fab fa-whatsapp"></i></a>
-                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.facebook.com/106423811606037?ref=PROFILE_EDIT_xav_ig_profile_page_web"><i class="fab fa-facebook-f"></i></a>
-                            </div>
-                        </div>
-                    </div>
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-item">
+                    <h4 class="text-light mb-3">Why People Like us!</h4>
+                    <p class="mb-4">High-quality products, competitive prices, excellent service and fast countrywide delivery.</p>
                 </div>
-                <div class="row g-5">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-item">
-                            <h4 class="text-light mb-3">Why People Like us!</h4>
-                            <p class="mb-4">We offer high-quality products at competitive prices, along with excellent customer service and fast delivery.</p>
-                            <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
-                        </div>
-                    </div>
-                    <!-- <div class="col-lg-3 col-md-6">
-                        <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Shop Info</h4>
-                            <a class="btn-link" href="">About Us</a>
-                            <a class="btn-link" href="">Contact Us</a>
-                            <a class="btn-link" href="">Privacy Policy</a>
-                            <a class="btn-link" href="">Terms & Condition</a>
-                            <a class="btn-link" href="">Return Policy</a>
-                            <a class="btn-link" href="">FAQs & Help</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="d-flex flex-column text-start footer-item">
-                            <h4 class="text-light mb-3">Account</h4>
-                            <a class="btn-link" href="">My Account</a>
-                            <a class="btn-link" href="">Shop details</a>
-                            <a class="btn-link" href="">Shopping Cart</a>
-                            <a class="btn-link" href="">Wishlist</a>
-                            <a class="btn-link" href="">Order History</a>
-                            <a class="btn-link" href="">International Orders</a>
-                        </div>
-                    </div> -->
-                    <div class="col-lg-3 col-md-6">
-                        <div class="footer-item">
-                            <h4 class="text-light mb-3">Contact</h4>
-                            <p>Address: Nairobi, Kenya</p>
-                            <p>Email: kemboijmercy50@gmail.com</p>
-                            <p>Phone: +254705191550</p>
-                            <!-- <p>Payment Accepted</p> -->
-                            <!-- <img src="img/payment.png" class="img-fluid" alt=""> -->
-                        </div>
-                    </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-item">
+                    <h4 class="text-light mb-3">Contact</h4>
+                    <p>Address: Nairobi, Kenya</p>
+                    <p>Email: kemboijmercy50@gmail.com</p>
+                    <p>Phone: +254705191550</p>
                 </div>
             </div>
         </div>
-        <!-- Footer End -->
-
-        <!-- Copyright Start -->
-        <div class="container-fluid copyright bg-dark py-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        <span class="text-light"><a href="https://www.instagram.com/borahae_store_ke/"><i class="fas fa-copyright text-light me-2"></i>borahae_store_ke</a>, All right reserved.</span>
-                    </div>
-                    <div class="col-md-6 my-auto text-center text-md-end text-white">
-                        Designed By <a>slydesigns</a> 
-                    </div>
-                </div>
+    </div>
+</div>
+<div class="container-fluid copyright bg-dark py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <span class="text-light"><a href="https://www.instagram.com/borahae_store_ke/"><i class="fas fa-copyright text-light me-2"></i>borahae_store_ke</a>, All right reserved.</span>
             </div>
+            <div class="col-md-6 my-auto text-center text-md-end text-white">Designed By <a>slydesigns</a></div>
         </div>
-        <!-- Copyright End -->
+    </div>
+</div>
 
+<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
 
+<!-- JS Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/lightbox/js/lightbox.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/borahae-fixes.js"></script>
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+<script>
+(function () {
 
-        
-    <!-- JavaScript Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+  const FORMSPREE_ID = "https://formspree.io/f/xeewongo"; // <-- same as borahae-fixes.js
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
-    </body>
+  /* ── cart state (mirrors borahae-fixes.js) ── */
+  function loadCart() { return JSON.parse(sessionStorage.getItem("borahae_cart") || "[]"); }
+  function saveCart(c) { sessionStorage.setItem("borahae_cart", JSON.stringify(c)); }
 
+  let cart = loadCart();
+
+  function getTotal() { return cart.reduce((s, i) => s + i.price * i.qty, 0); }
+
+  /* ── render table ── */
+  function render() {
+    cart = loadCart(); // always re-read in case other tab changed it
+
+    const tbody   = document.getElementById("cartBody");
+    const empty   = document.getElementById("cartEmpty");
+    const content = document.getElementById("cartContent");
+    const badge   = document.querySelectorAll(".cart-count-badge");
+
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    badge.forEach(b => b.textContent = count);
+
+    if (!cart.length) {
+      content.classList.add("d-none");
+      empty.classList.remove("d-none");
+      return;
+    }
+    content.classList.remove("d-none");
+    empty.classList.add("d-none");
+
+    tbody.innerHTML = cart.map(item => `
+      <tr data-id="${item.id}">
+        <td>
+          <img src="${item.img}" class="cart-img" onerror="this.src='img/mg2.jpeg'" alt="${item.name}">
+        </td>
+        <td>
+          <a href="shop-detail.html?id=${item.id}" class="fw-semibold text-dark text-decoration-none">${item.name}</a>
+          <div class="text-muted small">${item.category ? item.category.replace("-"," ") : ""}</div>
+        </td>
+        <td><span class="price-pill">Ksh ${item.price.toLocaleString()}</span></td>
+        <td>
+          <div class="qty-wrap">
+            <button class="qty-minus" data-id="${item.id}"><i class="fa fa-minus" style="font-size:.65rem;"></i></button>
+            <input type="number" value="${item.qty}" min="1" max="99" class="qty-input" data-id="${item.id}" readonly>
+            <button class="qty-plus" data-id="${item.id}"><i class="fa fa-plus" style="font-size:.65rem;"></i></button>
+          </div>
+        </td>
+        <td><strong>Ksh ${(item.price * item.qty).toLocaleString()}</strong></td>
+        <td>
+          <button class="remove-btn remove-item" data-id="${item.id}" title="Remove">
+            <i class="fa fa-times text-danger"></i>
+          </button>
+        </td>
+      </tr>`).join("");
+
+    renderSummary();
+    bindRowEvents();
+  }
+
+  function renderSummary() {
+    const lines = document.getElementById("summaryLines");
+    const total = document.getElementById("summaryTotal");
+    lines.innerHTML = cart.map(i => `
+      <div class="d-flex justify-content-between mb-2">
+        <span class="text-muted" style="font-size:.88rem;">${i.name} × ${i.qty}</span>
+        <span class="fw-semibold" style="font-size:.88rem;">Ksh ${(i.price * i.qty).toLocaleString()}</span>
+      </div>`).join("");
+    total.textContent = `Ksh ${getTotal().toLocaleString()}`;
+  }
+
+  function bindRowEvents() {
+    document.querySelectorAll(".qty-minus").forEach(btn => {
+      btn.addEventListener("click", () => changeQty(Number(btn.dataset.id), -1));
+    });
+    document.querySelectorAll(".qty-plus").forEach(btn => {
+      btn.addEventListener("click", () => changeQty(Number(btn.dataset.id), 1));
+    });
+    document.querySelectorAll(".remove-item").forEach(btn => {
+      btn.addEventListener("click", () => removeItem(Number(btn.dataset.id)));
+    });
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    saveCart(cart);
+    render();
+  }
+
+  function removeItem(id) {
+    cart = cart.filter(i => i.id !== id);
+    saveCart(cart);
+    render();
+  }
+
+  document.getElementById("clearCartBtn")?.addEventListener("click", () => {
+    if (confirm("Remove all items from your cart?")) {
+      cart = []; saveCart(cart); render();
+    }
+  });
+
+  /* ── Proceed to Order toggle ── */
+  document.getElementById("proceedBtn")?.addEventListener("click", () => {
+    const form = document.getElementById("checkout-form");
+    form.classList.toggle("show");
+    if (form.classList.contains("show")) {
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  /* ── Submit order ── */
+  document.getElementById("submitOrderBtn")?.addEventListener("click", async () => {
+    const name     = document.getElementById("co-name").value.trim();
+    const phone    = document.getElementById("co-phone").value.trim();
+    const email    = document.getElementById("co-email").value.trim();
+    const location = document.getElementById("co-location").value.trim();
+    const notes    = document.getElementById("co-notes").value.trim();
+
+    if (!name || !phone || !location) {
+      alert("Please fill in your name, phone number, and delivery location.");
+      return;
+    }
+
+    const btn     = document.getElementById("submitOrderBtn");
+    const txt     = document.getElementById("submitOrderText");
+    const spin    = document.getElementById("submitOrderSpinner");
+    btn.disabled = true; txt.classList.add("d-none"); spin.classList.remove("d-none");
+
+    const itemsSummary = cart.map(i => `  • ${i.name} x${i.qty} — Ksh ${(i.price * i.qty).toLocaleString()}`).join("\n");
+    const total        = getTotal();
+
+    const payload = {
+      name:    `[ORDER] ${name}`,
+      email:   email || "no-email@borahae.store",
+      phone,
+      message: `
+🛒 NEW ORDER — Borahae Store Website
+==========================================
+Customer : ${name}
+Phone    : ${phone}
+Email    : ${email || "—"}
+Location : ${location}
+
+ITEMS:
+${itemsSummary}
+
+TOTAL    : Ksh ${total.toLocaleString()}
+
+Notes / Branding:
+${notes || "None"}
+==========================================
+Follow up to confirm delivery & payment.
+      `.trim(),
+    };
+
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        // Clear cart
+        cart = []; saveCart(cart);
+
+        // Show success, hide form fields
+        document.getElementById("checkout-success").classList.remove("d-none");
+        document.getElementById("checkout-fields").classList.add("d-none");
+
+        // Update table view
+        render();
+      } else { throw new Error(); }
+
+    } catch (_) {
+      document.getElementById("checkout-error").classList.remove("d-none");
+    } finally {
+      btn.disabled = false; txt.classList.remove("d-none"); spin.classList.add("d-none");
+    }
+  });
+
+  /* ── init ── */
+  render();
+
+})();
+</script>
+
+</body>
 </html>
