@@ -1,18 +1,17 @@
 (function () {
   "use strict";
  
-  /* ─────────────────────────────────────────────
-   *  CONFIG — edit these values
-   * ───────────────────────────────────────────── */
-  const FORMSPREE_ID = "https://formspree.io/f/xeewongo"; // <-- from formspree.io
+  /* ─────────────────────────────────────────
+   *  CONFIG
+   * ───────────────────────────────────────── */
+  const FORMSPREE_ID = "YOUR_FORMSPREE_ID"; // <-- change this
  
-  /* ─────────────────────────────────────────────
-   *  PRODUCT DATA
-   *  Each product has: category, name, desc, price, img
-   *  Categories match the tab filter pills exactly.
-   * ───────────────────────────────────────────── */
+  /* ─────────────────────────────────────────
+   *  PRODUCT DATA  (single source of truth)
+   *  All pages pull from window.BORAHAE.PRODUCTS
+   * ───────────────────────────────────────── */
   const PRODUCTS = [
-    // Water Bottles / Mugs  →  tab-2
+    // Water Bottles / Mugs  →  tab-2 / category: water-bottles
     { id: 1,  category: "water-bottles", name: "Branded Frosted Mugs",       desc: "Elegant matte finish, customized messages & high quality prints", price: 1500, img: "img/mg2.jpeg" },
     { id: 2,  category: "water-bottles", name: "Stanley Mugs",               desc: "Get your branded/plain Stanley mugs for the vibe",               price: 2800, img: "img/mg30.jpg" },
     { id: 3,  category: "water-bottles", name: "Thermal Flask",              desc: "Keep your drinks hot or cold with our premium Thermal Flasks",   price: 1500, img: "img/mg33.png" },
@@ -31,8 +30,7 @@
   ];
  
   /* ─────────────────────────────────────────
-   *  CART STATE (survives page refresh via
-   *  sessionStorage — clears when tab closes)
+   *  CART STATE
    * ───────────────────────────────────────── */
   let cart = JSON.parse(sessionStorage.getItem("borahae_cart") || "[]");
  
@@ -48,11 +46,12 @@
     document.querySelectorAll(".cart-count-badge").forEach((b) => (b.textContent = getCartCount()));
   }
  
-  function addToCart(productId) {
+  function addToCart(productId, qty) {
+    qty = qty || 1;
     const product = PRODUCTS.find((p) => p.id === productId);
     if (!product) return;
     const existing = cart.find((i) => i.id === productId);
-    if (existing) { existing.qty++; } else { cart.push({ ...product, qty: 1 }); }
+    if (existing) { existing.qty += qty; } else { cart.push({ ...product, qty }); }
     saveCart();
     updateCartBadge();
     showToast(`<strong>${product.name}</strong> added to cart!`, "success");
@@ -62,12 +61,9 @@
     const item = cart.find((i) => i.id === productId);
     if (!item) return;
     item.qty += delta;
-    if (item.qty <= 0) {
-      cart = cart.filter((i) => i.id !== productId);
-    }
+    if (item.qty <= 0) cart = cart.filter((i) => i.id !== productId);
     saveCart();
     updateCartBadge();
-    // Re-render the cart rows inside the open modal
     renderOrderSummary();
   }
  
@@ -79,7 +75,7 @@
   }
  
   /* ─────────────────────────────────────────
-   *  TOAST NOTIFICATION
+   *  TOAST
    * ───────────────────────────────────────── */
   function showToast(html, type) {
     const old = document.getElementById("borahae-toast");
@@ -100,7 +96,7 @@
   }
  
   /* ─────────────────────────────────────────
-   *  PRODUCT CARD HTML
+   *  HELPERS
    * ───────────────────────────────────────── */
   function categoryLabel(cat) {
     return { "water-bottles": "Water Bottles", notebooks: "Notebooks", "tote-bags": "Tote Bags", "phone-cases": "Phone Cases" }[cat] || cat;
@@ -114,17 +110,25 @@
     return `
       <div class="col-md-6 col-lg-4 col-xl-3" data-category="${p.category}" data-name="${p.name.toLowerCase()}">
         <div class="rounded position-relative fruite-item">
-          <div class="fruite-img">
-            <img src="${p.img}" class="img-fluid w-100 rounded-top" alt="${p.name}" onerror="this.src='img/mg2.jpeg'">
+          <div class="fruite-img" style="overflow:hidden;">
+            <a href="shop-detail.html?id=${p.id}">
+              <img src="${p.img}" class="img-fluid w-100 rounded-top" alt="${p.name}"
+                style="height:180px;object-fit:cover;transition:transform .35s;"
+                onmouseover="this.style.transform='scale(1.06)'"
+                onmouseout="this.style.transform='scale(1)'"
+                onerror="this.src='img/mg2.jpeg'">
+            </a>
           </div>
-          <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top:10px;left:10px;">${categoryLabel(p.category)}</div>
+          <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top:10px;left:10px;font-size:.78rem;">${categoryLabel(p.category)}</div>
           <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-            <h4>${p.name}</h4>
-            <p>${p.desc}</p>
+            <a href="shop-detail.html?id=${p.id}" class="text-decoration-none">
+              <h5 class="text-dark fw-bold mb-1">${p.name}</h5>
+            </a>
+            <p class="text-muted small mb-3">${p.desc}</p>
             <div class="d-flex justify-content-between align-items-center flex-lg-wrap gap-2">
               <p class="text-dark fs-5 fw-bold mb-0">Ksh ${p.price.toLocaleString()}</p>
               <button class="btn border border-secondary rounded-pill px-3 text-primary add-to-cart-btn" data-id="${p.id}">
-                <i class="fa fa-shopping-bag me-2 text-primary"></i>Add to cart
+                <i class="fa fa-shopping-bag me-1 text-primary"></i>Add to cart
               </button>
             </div>
           </div>
@@ -133,7 +137,7 @@
   }
  
   /* ─────────────────────────────────────────
-   *  1. PRODUCT FILTERS ("Pick your Poison")
+   *  1. PRODUCT FILTERS (index.html tabs)
    * ───────────────────────────────────────── */
   function initFilters() {
     const tabMap = { "tab-1": "all", "tab-2": "water-bottles", "tab-3": "notebooks", "tab-4": "tote-bags", "tab-5": "phone-cases" };
@@ -151,11 +155,10 @@
   }
  
   /* ─────────────────────────────────────────
-   *  2. SEARCH — navbar modal search AND
-   *     the hero "Submit" search bar
+   *  2. SEARCH — navbar modal + hero bar
    * ───────────────────────────────────────── */
   function initSearch() {
-    // ── A) Navbar modal search ──────────────
+    // A) Navbar modal
     const modal = document.getElementById("searchModal");
     if (modal) {
       const body = modal.querySelector(".modal-body");
@@ -164,65 +167,50 @@
       resultsDiv.style.cssText = "width:75%;margin:16px auto 0;max-height:55vh;overflow-y:auto;";
       body.appendChild(resultsDiv);
  
-      const input    = modal.querySelector("input[type=search]");
-      const iconBtn  = modal.querySelector(".input-group-text");
+      const input   = modal.querySelector("input[type=search]");
+      const iconBtn = modal.querySelector(".input-group-text");
  
-      function doModalSearch() {
-        runSearch((input.value || "").trim().toLowerCase(), resultsDiv, modal);
-      }
+      function doModalSearch() { runSearch((input.value || "").trim().toLowerCase(), resultsDiv, modal); }
       input.addEventListener("keydown", (e) => { if (e.key === "Enter") doModalSearch(); });
       iconBtn.addEventListener("click", doModalSearch);
       modal.addEventListener("hidden.bs.modal", () => { input.value = ""; resultsDiv.innerHTML = ""; });
     }
  
-    // ── B) Hero "Submit" search bar ─────────
-    // Matches the search input + button in the hero-header section
-    function wireHeroSearch(inputEl, btnEl) {
-      function doHeroSearch() {
-        const q = (inputEl.value || "").trim().toLowerCase();
-        if (!q) return;
- 
-        // Find match
-        const found = PRODUCTS.filter(
-          (p) => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
-        );
- 
-        if (!found.length) {
-          showToast(`No products found for "<strong>${q}</strong>"`, "info");
-          return;
-        }
- 
-        // Scroll down to the shop section and highlight first match
-        const shopSection = document.querySelector(".fruite");
-        if (shopSection) shopSection.scrollIntoView({ behavior: "smooth", block: "start" });
- 
-        // Switch to All Products tab first so product is visible
-        const allTab = document.querySelector('[href="#tab-1"]');
-        if (allTab) allTab.click();
- 
-        setTimeout(() => {
-          const card = document.querySelector(`[data-id="${found[0].id}"]`);
-          if (card) {
-            card.closest(".fruite-item")?.scrollIntoView({ behavior: "smooth", block: "center" });
-            card.closest(".fruite-item")?.classList.add("search-highlight");
-            setTimeout(() => card.closest(".fruite-item")?.classList.remove("search-highlight"), 2500);
-          }
-          if (found.length > 1) {
-            showToast(`Found <strong>${found.length} products</strong> matching "${q}" — showing first result`, "info");
-          }
-        }, 400);
-      }
- 
-      btnEl.addEventListener("click", doHeroSearch);
-      inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doHeroSearch(); } });
-    }
- 
-    // Wire every .hero-header search bar (there may be one)
+    // B) Hero / inline search bars with submit buttons
     document.querySelectorAll(".hero-header .position-relative").forEach((wrapper) => {
       const inp = wrapper.querySelector("input");
       const btn = wrapper.querySelector("button[type=submit]");
-      if (inp && btn) wireHeroSearch(inp, btn);
+      if (inp && btn) wireInlineSearch(inp, btn);
     });
+  }
+ 
+  function wireInlineSearch(inputEl, btnEl) {
+    function go() {
+      const q = (inputEl.value || "").trim().toLowerCase();
+      if (!q) return;
+      const found = PRODUCTS.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
+      );
+      if (!found.length) { showToast(`No products found for "<strong>${q}</strong>"`, "info"); return; }
+ 
+      const shopSection = document.querySelector(".fruite");
+      if (shopSection) shopSection.scrollIntoView({ behavior: "smooth", block: "start" });
+ 
+      const allTab = document.querySelector('[href="#tab-1"]');
+      if (allTab) allTab.click();
+ 
+      setTimeout(() => {
+        const card = document.querySelector(`[data-id="${found[0].id}"]`);
+        if (card) {
+          card.closest(".fruite-item")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          card.closest(".fruite-item")?.classList.add("search-highlight");
+          setTimeout(() => card.closest(".fruite-item")?.classList.remove("search-highlight"), 2500);
+        }
+        if (found.length > 1) showToast(`Found <strong>${found.length} products</strong> matching "${q}"`, "info");
+      }, 400);
+    }
+    btnEl.addEventListener("click", go);
+    inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); go(); } });
   }
  
   function runSearch(q, resultsDiv, modal) {
@@ -230,12 +218,10 @@
     const found = PRODUCTS.filter(
       (p) => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
     );
- 
     if (!found.length) {
-      resultsDiv.innerHTML = `<div class="alert alert-warning mt-2"><i class="fas fa-search me-2"></i>No products found for "<strong>${q}</strong>". Try "mugs", "tote", "notebook", "flask" etc.</div>`;
+      resultsDiv.innerHTML = `<div class="alert alert-warning mt-2"><i class="fas fa-search me-2"></i>No products found for "<strong>${q}</strong>". Try "mugs", "tote", "notebook", "flask".</div>`;
       return;
     }
- 
     resultsDiv.innerHTML = `
       <p class="text-muted mb-2">${found.length} result${found.length > 1 ? "s" : ""} for "<strong>${q}</strong>"</p>
       <div class="list-group">
@@ -253,19 +239,13 @@
  
     resultsDiv.querySelectorAll(".search-result-btn").forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        // If they clicked "Add" button, just add — don't navigate
         if (e.target.closest(".add-to-cart-btn")) return;
- 
-        const tabId     = btn.dataset.tab;
-        const productId = btn.dataset.productId;
-        const bsModal   = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+        const bsModal = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
         bsModal.hide();
- 
-        const tabLink = document.querySelector(`[href="#${tabId}"]`);
+        const tabLink = document.querySelector(`[href="#${btn.dataset.tab}"]`);
         if (tabLink) tabLink.click();
- 
         setTimeout(() => {
-          const card = document.querySelector(`[data-id="${productId}"]`);
+          const card = document.querySelector(`[data-id="${btn.dataset.productId}"]`);
           if (card) {
             card.closest(".fruite-item")?.scrollIntoView({ behavior: "smooth", block: "center" });
             card.closest(".fruite-item")?.classList.add("search-highlight");
@@ -288,8 +268,6 @@
  
   /* ─────────────────────────────────────────
    *  4. ORDER MODAL
-   *     Cart items show +/- qty controls and
-   *     a remove (×) button per row.
    * ───────────────────────────────────────── */
   function injectOrderModal() {
     if (document.getElementById("orderModal")) return;
@@ -303,8 +281,6 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
- 
-        <!-- Cart items with qty controls -->
         <div id="order-cart-summary" class="mb-4">
           <h6 class="text-muted text-uppercase fw-semibold mb-3" style="letter-spacing:.07em;">Cart Items</h6>
           <div id="order-items-list"></div>
@@ -316,17 +292,13 @@
             <span class="text-primary" id="order-total">Ksh 0</span>
           </div>
         </div>
- 
-        <!-- Success / Error -->
         <div id="order-success" class="alert alert-success d-none">
           <i class="fas fa-check-circle me-2"></i><strong>Order placed!</strong>
           We'll call you shortly to confirm pickup/delivery and payment. Thank you! 🎉
         </div>
         <div id="order-error" class="alert alert-danger d-none">
-          <i class="fas fa-exclamation-circle me-2"></i>Something went wrong. Please WhatsApp us directly at +254705191550.
+          <i class="fas fa-exclamation-circle me-2"></i>Something went wrong. Please WhatsApp us at +254705191550.
         </div>
- 
-        <!-- Customer form -->
         <div id="order-form-section">
           <h6 class="text-muted text-uppercase fw-semibold mb-3 mt-2" style="letter-spacing:.07em;">Your Details</h6>
           <div class="row g-3">
@@ -348,7 +320,6 @@
             </div>
           </div>
         </div>
- 
       </div>
       <div class="modal-footer border-0 px-4 pb-4 pt-0" id="order-footer">
         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
@@ -367,17 +338,11 @@
   }
  
   function openOrderModal() {
-    if (!cart.length) {
-      showToast("Your cart is empty — add some items first!", "info");
-      return;
-    }
-    // Reset state
+    if (!cart.length) { showToast("Your cart is empty — add some items first!", "info"); return; }
     ["order-success","order-error"].forEach((id) => document.getElementById(id).classList.add("d-none"));
     document.getElementById("order-form-section").classList.remove("d-none");
     document.getElementById("order-footer").classList.remove("d-none");
-    ["order-name","order-phone","order-email","order-location","order-notes"]
-      .forEach((id) => { document.getElementById(id).value = ""; });
- 
+    ["order-name","order-phone","order-email","order-location","order-notes"].forEach((id) => { document.getElementById(id).value = ""; });
     renderOrderSummary();
     new bootstrap.Modal(document.getElementById("orderModal")).show();
   }
@@ -386,19 +351,18 @@
     const list     = document.getElementById("order-items-list");
     const emptyMsg = document.getElementById("order-empty-msg");
     const totalRow = document.getElementById("order-total-row");
-    const placeBtn = document.getElementById("order-footer");
+    const footer   = document.getElementById("order-footer");
  
     if (!cart.length) {
       list.innerHTML = "";
       emptyMsg?.classList.remove("d-none");
       totalRow?.classList.add("d-none");
-      placeBtn?.classList.add("d-none");
+      footer?.classList.add("d-none");
       return;
     }
- 
     emptyMsg?.classList.add("d-none");
     totalRow?.classList.remove("d-none");
-    placeBtn?.classList.remove("d-none");
+    footer?.classList.remove("d-none");
  
     let total = 0;
     list.innerHTML = cart.map((item) => {
@@ -411,25 +375,18 @@
             <div class="fw-semibold" style="font-size:.92rem;">${item.name}</div>
             <div class="text-muted" style="font-size:.82rem;">Ksh ${item.price.toLocaleString()} each</div>
           </div>
-          <!-- qty controls -->
           <div class="d-flex align-items-center gap-1">
-            <button class="btn btn-sm btn-outline-secondary cart-qty-btn px-2 py-0" style="line-height:1.6;"
-              data-id="${item.id}" data-delta="-1">−</button>
+            <button class="btn btn-sm btn-outline-secondary cart-qty-btn px-2 py-0" style="line-height:1.6;" data-id="${item.id}" data-delta="-1">−</button>
             <span class="px-2 fw-bold">${item.qty}</span>
-            <button class="btn btn-sm btn-outline-secondary cart-qty-btn px-2 py-0" style="line-height:1.6;"
-              data-id="${item.id}" data-delta="1">+</button>
+            <button class="btn btn-sm btn-outline-secondary cart-qty-btn px-2 py-0" style="line-height:1.6;" data-id="${item.id}" data-delta="1">+</button>
           </div>
-          <div class="fw-bold text-dark" style="min-width:80px;text-align:right;">
-            Ksh ${(item.price * item.qty).toLocaleString()}
-          </div>
-          <button class="btn btn-sm btn-outline-danger cart-remove-btn rounded-circle px-2 py-0"
-            style="line-height:1.6;" data-id="${item.id}" title="Remove">×</button>
+          <div class="fw-bold text-dark" style="min-width:80px;text-align:right;">Ksh ${(item.price * item.qty).toLocaleString()}</div>
+          <button class="btn btn-sm btn-outline-danger cart-remove-btn rounded-circle px-2 py-0" style="line-height:1.6;" data-id="${item.id}" title="Remove">×</button>
         </div>`;
     }).join("");
  
     document.getElementById("order-total").textContent = `Ksh ${total.toLocaleString()}`;
  
-    // Bind qty +/- and remove buttons
     list.querySelectorAll(".cart-qty-btn").forEach((btn) => {
       btn.addEventListener("click", () => changeQty(Number(btn.dataset.id), Number(btn.dataset.delta)));
     });
@@ -438,9 +395,6 @@
     });
   }
  
-  /* ─────────────────────────────────────────
-   *  PLACE ORDER → sends email via Formspree
-   * ───────────────────────────────────────── */
   async function placeOrder() {
     const name     = document.getElementById("order-name").value.trim();
     const phone    = document.getElementById("order-phone").value.trim();
@@ -448,21 +402,13 @@
     const location = document.getElementById("order-location").value.trim();
     const notes    = document.getElementById("order-notes").value.trim();
  
-    if (!name || !phone || !location) {
-      showToast("Please fill in your name, phone number, and location.", "info");
-      return;
-    }
-    if (!cart.length) {
-      showToast("Your cart is empty!", "info");
-      return;
-    }
+    if (!name || !phone || !location) { showToast("Please fill in your name, phone number, and location.", "info"); return; }
+    if (!cart.length) { showToast("Your cart is empty!", "info"); return; }
  
     const btn     = document.getElementById("place-order-btn");
     const btnText = document.getElementById("place-order-text");
     const spinner = document.getElementById("place-order-spinner");
-    btn.disabled = true;
-    btnText.classList.add("d-none");
-    spinner.classList.remove("d-none");
+    btn.disabled = true; btnText.classList.add("d-none"); spinner.classList.remove("d-none");
  
     const itemsSummary = cart.map((i) => `  • ${i.name} x${i.qty} — Ksh ${(i.price * i.qty).toLocaleString()}`).join("\n");
     const total        = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -497,36 +443,34 @@ Follow up to confirm delivery & payment.
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload),
       });
- 
       if (res.ok) {
         cart = []; saveCart(); updateCartBadge();
         document.getElementById("order-success").classList.remove("d-none");
         document.getElementById("order-form-section").classList.add("d-none");
         document.getElementById("order-footer").classList.add("d-none");
         renderOrderSummary();
-      } else {
-        throw new Error();
-      }
+      } else { throw new Error(); }
     } catch (_) {
       document.getElementById("order-error").classList.remove("d-none");
     } finally {
-      btn.disabled = false;
-      btnText.classList.remove("d-none");
-      spinner.classList.add("d-none");
+      btn.disabled = false; btnText.classList.remove("d-none"); spinner.classList.add("d-none");
     }
   }
  
   /* ─────────────────────────────────────────
-   *  GLOBAL CLICK DELEGATION
+   *  5. GLOBAL CLICK DELEGATION
    * ───────────────────────────────────────── */
   function initCartEvents() {
     document.addEventListener("click", (e) => {
       const addBtn = e.target.closest(".add-to-cart-btn");
-      if (addBtn) { addToCart(Number(addBtn.dataset.id)); return; }
- 
+      if (addBtn) {
+        // shop-detail page handles its own qty — skip if it's the main detail button
+        if (addBtn.id === "detailAddToCart") return;
+        addToCart(Number(addBtn.dataset.id));
+        return;
+      }
       const cartLink = e.target.closest('a[href="cart.html"]');
       if (cartLink) { e.preventDefault(); openOrderModal(); return; }
- 
       const checkoutLink = e.target.closest('a[href="chackout.html"]');
       if (checkoutLink) { e.preventDefault(); openOrderModal(); }
     });
@@ -539,20 +483,16 @@ Follow up to confirm delivery & payment.
     const s = document.createElement("style");
     s.textContent = `
       .search-highlight {
-        outline: 3px solid #f4a01c;
-        outline-offset: 4px;
-        border-radius: 8px;
+        outline: 3px solid #f4a01c; outline-offset: 4px; border-radius: 8px;
         animation: highlight-pulse 2.4s ease forwards;
       }
       @keyframes highlight-pulse {
-        0%   { outline-color: #f4a01c; }
-        80%  { outline-color: #f4a01c; }
-        100% { outline-color: transparent; }
+        0%,80% { outline-color: #f4a01c; }
+        100%    { outline-color: transparent; }
       }
       .cart-count-badge { min-width: 20px; font-size: 12px; }
       #searchModal .list-group-item:hover { background: #f0f4ff; }
-      .cart-qty-btn { font-size: 1rem; font-weight: bold; }
-      .cart-remove-btn { font-size: 1rem; font-weight: bold; }
+      .cart-qty-btn, .cart-remove-btn { font-size: 1rem; font-weight: bold; }
     `;
     document.head.appendChild(s);
   }
@@ -562,12 +502,19 @@ Follow up to confirm delivery & payment.
    * ───────────────────────────────────────── */
   function boot() {
     injectStyles();
-    initFilters();
+    initFilters();        // only affects pages with tab-1…tab-5
     initSearch();
     initCartBadge();
     injectOrderModal();
     initCartEvents();
     updateCartBadge();
+ 
+    // ── Expose global API for shop-detail.html ──
+    window.BORAHAE = {
+      PRODUCTS,
+      addToCartQty: addToCart,   // addToCart(id, qty)
+      openOrderModal,
+    };
   }
  
   document.readyState === "loading"
