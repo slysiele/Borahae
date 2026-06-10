@@ -209,7 +209,7 @@
                         </button>
 
                         <a href="https://wa.me/254705191550" target="_blank"
-                            class="btn btn-success rounded-pill w-100 py-2 fw-semibold">
+                            class="btn btn-success rounded-pill w-100 py-2 fw-semibold wa-order-btn">
                             <i class="fab fa-whatsapp me-2"></i>Order via WhatsApp
                         </a>
                     </div>
@@ -295,7 +295,7 @@
                 <div class="footer-item">
                     <h4 class="text-light mb-3">Contact</h4>
                     <p>Address: Nairobi, Kenya</p>
-                    <p>Email: Kemboigoodness@gmail.com</p>
+                    <p>Email: kemboijmercy50@gmail.com</p>
                     <p>Phone: +254705191550</p>
                 </div>
             </div>
@@ -328,11 +328,11 @@
 <script>
 (function () {
 
-  const FORMSPREE_ID = "mnjyzbpn"; // <-- same as borahae-fixes.js
+  const FORMSPREE_ID = "YOUR_FORMSPREE_ID"; // <-- same as borahae-fixes.js
 
   /* ── cart state (mirrors borahae-fixes.js) ── */
-  function loadCart() { return JSON.parse(sessionStorage.getItem("borahae_cart") || "[]"); }
-  function saveCart(c) { sessionStorage.setItem("borahae_cart", JSON.stringify(c)); }
+  function loadCart() { return JSON.parse(localStorage.getItem("borahae_cart") || "[]"); }
+  function saveCart(c) { localStorage.setItem("borahae_cart", JSON.stringify(c)); }
 
   let cart = loadCart();
 
