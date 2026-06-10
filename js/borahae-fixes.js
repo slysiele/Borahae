@@ -4,7 +4,7 @@
   /* ─────────────────────────────────────────
    *  CONFIG
    * ───────────────────────────────────────── */
-  const FORMSPREE_ID = "xeewongo"; // <-- change this
+  const FORMSPREE_ID = "mnjyzbpn"; // <-- change this
  
   /* ─────────────────────────────────────────
    *  PRODUCT DATA  (single source of truth)
