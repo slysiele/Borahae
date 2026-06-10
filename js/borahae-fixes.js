@@ -1,77 +1,138 @@
 (function () {
   "use strict";
  
-  /* ─────────────────────────────────────────
-   *  CONFIG
-   * ───────────────────────────────────────── */
-  const FORMSPREE_ID = "mnjyzbpn"; // <-- change this
+  const FORMSPREE_ID = "mnjyzbpn"; // your Formspree ID
  
   /* ─────────────────────────────────────────
-   *  PRODUCT DATA  (single source of truth)
-   *  All pages pull from window.BORAHAE.PRODUCTS
+   *  PRODUCT DATA
+   *  IDs must match every data-id="N" in HTML
    * ───────────────────────────────────────── */
   const PRODUCTS = [
-    // Water Bottles / Mugs  →  tab-2 / category: water-bottles
-    { id: 1,  category: "water-bottles", name: "Branded Frosted Mugs",       desc: "Elegant matte finish, customized messages & high quality prints", price: 1500, img: "img/mg2.jpeg" },
-    { id: 2,  category: "water-bottles", name: "Stanley Mugs",               desc: "Get your branded/plain Stanley mugs for the vibe",               price: 2800, img: "img/mg30.jpg" },
-    { id: 3,  category: "water-bottles", name: "Thermal Flask",              desc: "Keep your drinks hot or cold with our premium Thermal Flasks",   price: 1500, img: "img/mg33.png" },
-    { id: 4,  category: "water-bottles", name: "Steel Tumblers",             desc: "Keep your drinks cold with our premium Steel Tumblers",          price: 1800, img: "img/mg32.jpg" },
-    { id: 5,  category: "water-bottles", name: "Java Mugs",                  desc: "Up for grabs, get yours today and keep hydrating",               price: 1500, img: "img/mg26s.png" },
-    { id: 6,  category: "water-bottles", name: "Frosted Mugs 600ml",         desc: "Classic, Personalized branded/plain mugs 600ml",                 price: 1200, img: "img/m5.jpg" },
-    { id: 7,  category: "water-bottles", name: "Peach Thermal Flask 750ml",  desc: "750ml peach branded and unbranded",                              price: 1800, img: "img/m10.jpg" },
-    { id: 8,  category: "water-bottles", name: "Glass Mug",                  desc: "Classic, Personalized glass branded mugs",                       price: 1500, img: "img/m3.jpg" },
-    { id: 9,  category: "water-bottles", name: "Tumbler Mug",                desc: "Perfect size for that office bag! Get yours today!",             price: 1500, img: "img/m7.jpg" },
-    // Notebooks  →  tab-3
-    { id: 10, category: "notebooks",     name: "Notebooks & Pens",           desc: "Premium corporate gift sets & promotional items",                price: 2500, img: "img/mg12b.jpeg" },
-    // Tote Bags  →  tab-4
-    { id: 11, category: "tote-bags",     name: "Branded Tote Bags",          desc: "Everyday carry shopping and lifestyle",                          price: 2000, img: "img/mg17s.jpeg" },
-    // Phone Cases  →  tab-5
-    { id: 12, category: "phone-cases",   name: "Phone Cases",                desc: "Avoid broken screens, get our phone cases",                     price: 1500, img: "img/mg35s.jpeg" },
+    // ── Core catalogue (used by shop/shop-detail/filters) ──
+    { id: 1,  category: "water-bottles", name: "Branded Frosted Mugs",      desc: "Elegant matte finish, customized messages & high quality prints", price: 1500, img: "img/mg2.jpeg" },
+    { id: 2,  category: "water-bottles", name: "Stanley Mugs",              desc: "Get your branded/plain Stanley mugs for the vibe",               price: 2800, img: "img/mg30.jpg" },
+    { id: 3,  category: "water-bottles", name: "Thermal Flask",             desc: "Keep your drinks hot or cold with our premium Thermal Flasks",   price: 1500, img: "img/mg33.png" },
+    { id: 4,  category: "water-bottles", name: "Steel Tumblers",            desc: "Keep your drinks cold with our premium Steel Tumblers",          price: 1800, img: "img/mg32.jpg" },
+    { id: 5,  category: "water-bottles", name: "Java Mugs",                 desc: "Up for grabs, get yours today and keep hydrating",               price: 1500, img: "img/mg26s.png" },
+    { id: 6,  category: "water-bottles", name: "Frosted Mugs 600ml",        desc: "Classic, Personalized branded/plain mugs 600ml",                 price: 1200, img: "img/m5.jpg" },
+    { id: 7,  category: "water-bottles", name: "Peach Thermal Flask 750ml", desc: "750ml peach branded and unbranded",                              price: 1800, img: "img/m10.jpg" },
+    { id: 8,  category: "water-bottles", name: "Glass Mug",                 desc: "Classic, Personalized glass branded mugs",                       price: 1500, img: "img/m3.jpg" },
+    { id: 9,  category: "water-bottles", name: "Tumbler Mug",               desc: "Perfect size for that office bag! Get yours today!",             price: 1500, img: "img/m7.jpg" },
+    { id: 10, category: "notebooks",     name: "Notebooks & Pens",          desc: "Premium corporate gift sets & promotional items",                price: 2500, img: "img/mg12b.jpeg" },
+    { id: 11, category: "tote-bags",     name: "Branded Tote Bags",         desc: "Everyday carry shopping and lifestyle",                          price: 2000, img: "img/mg17s.jpeg" },
+    { id: 12, category: "phone-cases",   name: "Phone Cases",               desc: "Avoid broken screens, get our phone cases",                     price: 1500, img: "img/mg35s.jpeg" },
+ 
+    // ── Extra "Now Available" carousel items (ids 13-24) ──
+    // These appear as buttons with data-id in index.html carousel.
+    // Names/prices/imgs mirror what's in the HTML.
+    { id: 13, category: "water-bottles", name: "Frosted Mug Plain",         desc: "Classic frosted plain mug 600ml",                               price: 1000, img: "img/fbr2.jpeg" },
+    { id: 14, category: "water-bottles", name: "Frosted Mug Branded",       desc: "Classic frosted branded mug 600ml",                             price: 1200, img: "img/br1.jpeg" },
+    { id: 15, category: "water-bottles", name: "Frosted Plain 600ml",       desc: "Classic frosted plain mug for your preference 600ml",           price: 1000, img: "img/fp4.jpeg" },
+    { id: 16, category: "water-bottles", name: "Tumbler Mug Branded",       desc: "Perfect size for that office bag! Get yours today!",            price: 1500, img: "img/m7.jpg" },
+    { id: 17, category: "water-bottles", name: "Plain Stanley",             desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/s5.jpeg" },
+    { id: 18, category: "water-bottles", name: "Plain Stanley Multi-color", desc: "Plain Stanley mugs — multiple colors & sizes",                  price: 2500, img: "img/s6.jpeg" },
+    { id: 19, category: "water-bottles", name: "Plain Stanley Classic",     desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/s8.jpeg" },
+    { id: 20, category: "water-bottles", name: "Plain Stanley Sport",       desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/s9.jpeg" },
+    { id: 21, category: "water-bottles", name: "Plain Stanley Wide",        desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/s10.jpeg" },
+    { id: 22, category: "water-bottles", name: "Plain Stanley Slim",        desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/st12.jpeg" },
+    { id: 23, category: "water-bottles", name: "Plain Stanley Tall",        desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/st13.jpeg" },
+    { id: 24, category: "water-bottles", name: "Plain Stanley Compact",     desc: "Get your Plain Stanley mugs today!",                            price: 2500, img: "img/st14.jpeg" },
   ];
  
   /* ─────────────────────────────────────────
    *  CART STATE
+   *  Uses localStorage so cart persists across
+   *  page navigations (sessionStorage clears
+   *  when you navigate away on some browsers).
    * ───────────────────────────────────────── */
-  let cart = JSON.parse(sessionStorage.getItem("borahae_cart") || "[]");
+  function loadCart()    { try { return JSON.parse(localStorage.getItem("borahae_cart") || "[]"); } catch(e) { return []; } }
+  function saveCart(c)   { localStorage.setItem("borahae_cart", JSON.stringify(c)); }
  
-  function saveCart() {
-    sessionStorage.setItem("borahae_cart", JSON.stringify(cart));
-  }
+  let cart = loadCart();
  
-  function getCartCount() {
-    return cart.reduce((s, i) => s + i.qty, 0);
-  }
+  function getCartCount() { return cart.reduce((s, i) => s + i.qty, 0); }
  
   function updateCartBadge() {
-    document.querySelectorAll(".cart-count-badge").forEach((b) => (b.textContent = getCartCount()));
+    // Target ALL elements with cart-count-badge class, and also
+    // any .position-absolute inside a[href="cart.html"] as fallback
+    document.querySelectorAll(".cart-count-badge").forEach(b => b.textContent = getCartCount());
   }
  
   function addToCart(productId, qty) {
     qty = qty || 1;
-    const product = PRODUCTS.find((p) => p.id === productId);
-    if (!product) return;
-    const existing = cart.find((i) => i.id === productId);
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) {
+      // Product not in our list — still add with generic info so cart isn't silent
+      console.warn("Borahae: unknown product id", productId);
+      return;
+    }
+    cart = loadCart(); // re-read in case another tab changed it
+    const existing = cart.find(i => i.id === productId);
     if (existing) { existing.qty += qty; } else { cart.push({ ...product, qty }); }
-    saveCart();
+    saveCart(cart);
     updateCartBadge();
     showToast(`<strong>${product.name}</strong> added to cart!`, "success");
   }
  
   function changeQty(productId, delta) {
-    const item = cart.find((i) => i.id === productId);
+    cart = loadCart();
+    const item = cart.find(i => i.id === productId);
     if (!item) return;
     item.qty += delta;
-    if (item.qty <= 0) cart = cart.filter((i) => i.id !== productId);
-    saveCart();
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== productId);
+    saveCart(cart);
     updateCartBadge();
     renderOrderSummary();
   }
  
   function removeFromCart(productId) {
-    cart = cart.filter((i) => i.id !== productId);
-    saveCart();
+    cart = loadCart();
+    cart = cart.filter(i => i.id !== productId);
+    saveCart(cart);
     updateCartBadge();
     renderOrderSummary();
+  }
+ 
+  /* ─────────────────────────────────────────
+   *  WHATSAPP ORDER LINK
+   *  Builds a pre-filled wa.me link with the
+   *  full cart details.
+   * ───────────────────────────────────────── */
+  function buildWhatsAppLink(extraName, extraPhone, extraLocation, extraNotes) {
+    cart = loadCart();
+    const lines = cart.map(i => `• ${i.name} x${i.qty} — Ksh ${(i.price * i.qty).toLocaleString()}`).join("\n");
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    let msg = "Hi Borahae Store! I'd like to place an order:\n\n";
+    if (cart.length) {
+      msg += `ITEMS:\n${lines}\n\nTOTAL: Ksh ${total.toLocaleString()}\n`;
+    }
+    if (extraName)     msg += `\nName: ${extraName}`;
+    if (extraPhone)    msg += `\nPhone: ${extraPhone}`;
+    if (extraLocation) msg += `\nLocation: ${extraLocation}`;
+    if (extraNotes)    msg += `\nNotes: ${extraNotes}`;
+    msg += "\n\nPlease confirm delivery and payment details. Thank you!";
+    return `https://wa.me/254705191550?text=${encodeURIComponent(msg)}`;
+  }
+ 
+  /* Wire every WhatsApp button/link that has class "wa-order-btn"
+     or href starting with wa.me to dynamically get cart details */
+  function initWhatsAppButtons() {
+    document.querySelectorAll('a[href*="wa.me"], .wa-order-btn').forEach(el => {
+      // Only intercept the "Order via WhatsApp" style buttons, not social footer links
+      const text = (el.textContent || "").toLowerCase();
+      const isOrderBtn = text.includes("whatsapp") || text.includes("order") || el.classList.contains("wa-order-btn");
+      if (!isOrderBtn) return;
+ 
+      el.addEventListener("click", function(e) {
+        e.preventDefault();
+        // Try to read form fields if they exist on page (cart.html)
+        const name     = document.getElementById("co-name")?.value.trim()     || document.getElementById("order-name")?.value.trim()     || "";
+        const phone    = document.getElementById("co-phone")?.value.trim()    || document.getElementById("order-phone")?.value.trim()    || "";
+        const location = document.getElementById("co-location")?.value.trim() || document.getElementById("order-location")?.value.trim() || "";
+        const notes    = document.getElementById("co-notes")?.value.trim()    || document.getElementById("order-notes")?.value.trim()    || "";
+        window.open(buildWhatsAppLink(name, phone, location, notes), "_blank");
+      });
+    });
   }
  
   /* ─────────────────────────────────────────
@@ -101,7 +162,6 @@
   function categoryLabel(cat) {
     return { "water-bottles": "Water Bottles", notebooks: "Notebooks", "tote-bags": "Tote Bags", "phone-cases": "Phone Cases" }[cat] || cat;
   }
- 
   function categoryTabId(cat) {
     return { "water-bottles": "tab-2", notebooks: "tab-3", "tote-bags": "tab-4", "phone-cases": "tab-5" }[cat] || "tab-1";
   }
@@ -144,7 +204,8 @@
     Object.entries(tabMap).forEach(([tabId, cat]) => {
       const pane = document.getElementById(tabId);
       if (!pane) return;
-      const filtered = cat === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === cat);
+      // Only replace content if the tab exists (index.html)
+      const filtered = cat === "all" ? PRODUCTS.slice(0, 12) : PRODUCTS.filter(p => p.category === cat);
       pane.innerHTML = `
         <div class="row g-4"><div class="col-lg-12">
           <div class="row g-4" id="${tabId}-grid">
@@ -155,10 +216,9 @@
   }
  
   /* ─────────────────────────────────────────
-   *  2. SEARCH — navbar modal + hero bar
+   *  2. SEARCH
    * ───────────────────────────────────────── */
   function initSearch() {
-    // A) Navbar modal
     const modal = document.getElementById("searchModal");
     if (modal) {
       const body = modal.querySelector(".modal-body");
@@ -166,18 +226,16 @@
       resultsDiv.id = "search-results";
       resultsDiv.style.cssText = "width:75%;margin:16px auto 0;max-height:55vh;overflow-y:auto;";
       body.appendChild(resultsDiv);
- 
       const input   = modal.querySelector("input[type=search]");
       const iconBtn = modal.querySelector(".input-group-text");
- 
-      function doModalSearch() { runSearch((input.value || "").trim().toLowerCase(), resultsDiv, modal); }
-      input.addEventListener("keydown", (e) => { if (e.key === "Enter") doModalSearch(); });
-      iconBtn.addEventListener("click", doModalSearch);
+      function doSearch() { runSearch((input.value || "").trim().toLowerCase(), resultsDiv, modal); }
+      input.addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+      iconBtn.addEventListener("click", doSearch);
       modal.addEventListener("hidden.bs.modal", () => { input.value = ""; resultsDiv.innerHTML = ""; });
     }
  
-    // B) Hero / inline search bars with submit buttons
-    document.querySelectorAll(".hero-header .position-relative").forEach((wrapper) => {
+    // Hero submit button
+    document.querySelectorAll(".hero-header .position-relative").forEach(wrapper => {
       const inp = wrapper.querySelector("input");
       const btn = wrapper.querySelector("button[type=submit]");
       if (inp && btn) wireInlineSearch(inp, btn);
@@ -188,17 +246,14 @@
     function go() {
       const q = (inputEl.value || "").trim().toLowerCase();
       if (!q) return;
-      const found = PRODUCTS.filter(
-        (p) => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
+      const found = PRODUCTS.filter(p =>
+        p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
       );
       if (!found.length) { showToast(`No products found for "<strong>${q}</strong>"`, "info"); return; }
- 
       const shopSection = document.querySelector(".fruite");
       if (shopSection) shopSection.scrollIntoView({ behavior: "smooth", block: "start" });
- 
       const allTab = document.querySelector('[href="#tab-1"]');
       if (allTab) allTab.click();
- 
       setTimeout(() => {
         const card = document.querySelector(`[data-id="${found[0].id}"]`);
         if (card) {
@@ -210,13 +265,13 @@
       }, 400);
     }
     btnEl.addEventListener("click", go);
-    inputEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); go(); } });
+    inputEl.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); go(); } });
   }
  
   function runSearch(q, resultsDiv, modal) {
     if (!q) { resultsDiv.innerHTML = ""; return; }
-    const found = PRODUCTS.filter(
-      (p) => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
+    const found = PRODUCTS.filter(p =>
+      p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || categoryLabel(p.category).toLowerCase().includes(q)
     );
     if (!found.length) {
       resultsDiv.innerHTML = `<div class="alert alert-warning mt-2"><i class="fas fa-search me-2"></i>No products found for "<strong>${q}</strong>". Try "mugs", "tote", "notebook", "flask".</div>`;
@@ -225,7 +280,7 @@
     resultsDiv.innerHTML = `
       <p class="text-muted mb-2">${found.length} result${found.length > 1 ? "s" : ""} for "<strong>${q}</strong>"</p>
       <div class="list-group">
-        ${found.map((p) => `
+        ${found.map(p => `
           <button class="list-group-item list-group-item-action d-flex align-items-center gap-3 search-result-btn"
             data-product-id="${p.id}" data-tab="${categoryTabId(p.category)}">
             <img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;" onerror="this.src='img/mg2.jpeg'" alt="">
@@ -236,9 +291,8 @@
             <span class="btn btn-sm btn-primary rounded-pill px-3 add-to-cart-btn" data-id="${p.id}">Add</span>
           </button>`).join("")}
       </div>`;
- 
-    resultsDiv.querySelectorAll(".search-result-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+    resultsDiv.querySelectorAll(".search-result-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
         if (e.target.closest(".add-to-cart-btn")) return;
         const bsModal = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
         bsModal.hide();
@@ -257,13 +311,18 @@
   }
  
   /* ─────────────────────────────────────────
-   *  3. CART BADGE
+   *  3. CART BADGE — robust version
+   *  Adds class to ALL matching spans, then
+   *  immediately sets correct count.
    * ───────────────────────────────────────── */
   function initCartBadge() {
-    document.querySelectorAll('a[href="cart.html"]').forEach((link) => {
+    // Find the badge span inside every cart link and tag it
+    document.querySelectorAll('a[href="cart.html"]').forEach(link => {
       const badge = link.querySelector(".position-absolute");
       if (badge) badge.classList.add("cart-count-badge");
     });
+    // Set count immediately — covers page load with existing cart
+    updateCartBadge();
   }
  
   /* ─────────────────────────────────────────
@@ -319,6 +378,11 @@
                 placeholder="Branding details, special instructions, etc. (optional)"></textarea>
             </div>
           </div>
+          <div class="mt-3">
+            <button type="button" class="btn btn-success rounded-pill px-4 py-2 w-100 wa-order-btn">
+              <i class="fab fa-whatsapp me-2"></i>Order via WhatsApp instead
+            </button>
+          </div>
         </div>
       </div>
       <div class="modal-footer border-0 px-4 pb-4 pt-0" id="order-footer">
@@ -338,20 +402,25 @@
   }
  
   function openOrderModal() {
+    cart = loadCart();
     if (!cart.length) { showToast("Your cart is empty — add some items first!", "info"); return; }
-    ["order-success","order-error"].forEach((id) => document.getElementById(id).classList.add("d-none"));
+    ["order-success","order-error"].forEach(id => document.getElementById(id).classList.add("d-none"));
     document.getElementById("order-form-section").classList.remove("d-none");
     document.getElementById("order-footer").classList.remove("d-none");
-    ["order-name","order-phone","order-email","order-location","order-notes"].forEach((id) => { document.getElementById(id).value = ""; });
+    ["order-name","order-phone","order-email","order-location","order-notes"].forEach(id => { document.getElementById(id).value = ""; });
     renderOrderSummary();
     new bootstrap.Modal(document.getElementById("orderModal")).show();
+    // Wire WhatsApp button inside the freshly opened modal
+    setTimeout(initWhatsAppButtons, 100);
   }
  
   function renderOrderSummary() {
+    cart = loadCart();
     const list     = document.getElementById("order-items-list");
     const emptyMsg = document.getElementById("order-empty-msg");
     const totalRow = document.getElementById("order-total-row");
     const footer   = document.getElementById("order-footer");
+    if (!list) return;
  
     if (!cart.length) {
       list.innerHTML = "";
@@ -365,10 +434,10 @@
     footer?.classList.remove("d-none");
  
     let total = 0;
-    list.innerHTML = cart.map((item) => {
+    list.innerHTML = cart.map(item => {
       total += item.price * item.qty;
       return `
-        <div class="d-flex align-items-center gap-3 py-2 border-bottom cart-row" data-id="${item.id}">
+        <div class="d-flex align-items-center gap-3 py-2 border-bottom" data-id="${item.id}">
           <img src="${item.img}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;"
             onerror="this.src='img/mg2.jpeg'" alt="">
           <div class="flex-grow-1">
@@ -387,15 +456,16 @@
  
     document.getElementById("order-total").textContent = `Ksh ${total.toLocaleString()}`;
  
-    list.querySelectorAll(".cart-qty-btn").forEach((btn) => {
+    list.querySelectorAll(".cart-qty-btn").forEach(btn => {
       btn.addEventListener("click", () => changeQty(Number(btn.dataset.id), Number(btn.dataset.delta)));
     });
-    list.querySelectorAll(".cart-remove-btn").forEach((btn) => {
+    list.querySelectorAll(".cart-remove-btn").forEach(btn => {
       btn.addEventListener("click", () => removeFromCart(Number(btn.dataset.id)));
     });
   }
  
   async function placeOrder() {
+    cart = loadCart();
     const name     = document.getElementById("order-name").value.trim();
     const phone    = document.getElementById("order-phone").value.trim();
     const email    = document.getElementById("order-email").value.trim();
@@ -410,8 +480,8 @@
     const spinner = document.getElementById("place-order-spinner");
     btn.disabled = true; btnText.classList.add("d-none"); spinner.classList.remove("d-none");
  
-    const itemsSummary = cart.map((i) => `  • ${i.name} x${i.qty} — Ksh ${(i.price * i.qty).toLocaleString()}`).join("\n");
-    const total        = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const itemsSummary = cart.map(i => `  • ${i.name} x${i.qty} — Ksh ${(i.price * i.qty).toLocaleString()}`).join("\n");
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
  
     const payload = {
       name:    `[ORDER] ${name}`,
@@ -444,13 +514,18 @@ Follow up to confirm delivery & payment.
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        cart = []; saveCart(); updateCartBadge();
+        cart = []; saveCart(cart); updateCartBadge();
         document.getElementById("order-success").classList.remove("d-none");
         document.getElementById("order-form-section").classList.add("d-none");
         document.getElementById("order-footer").classList.add("d-none");
         renderOrderSummary();
-      } else { throw new Error(); }
-    } catch (_) {
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        console.error("Formspree error:", errData);
+        throw new Error("Formspree returned " + res.status);
+      }
+    } catch (err) {
+      console.error("Order submit error:", err);
       document.getElementById("order-error").classList.remove("d-none");
     } finally {
       btn.disabled = false; btnText.classList.remove("d-none"); spinner.classList.add("d-none");
@@ -461,16 +536,20 @@ Follow up to confirm delivery & payment.
    *  5. GLOBAL CLICK DELEGATION
    * ───────────────────────────────────────── */
   function initCartEvents() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", e => {
+      // Add to cart
       const addBtn = e.target.closest(".add-to-cart-btn");
       if (addBtn) {
-        // shop-detail page handles its own qty — skip if it's the main detail button
-        if (addBtn.id === "detailAddToCart") return;
+        if (addBtn.id === "detailAddToCart") return; // handled by shop-detail.html
         addToCart(Number(addBtn.dataset.id));
         return;
       }
-      const cartLink = e.target.closest('a[href="cart.html"]');
-      if (cartLink) { e.preventDefault(); openOrderModal(); return; }
+      // Cart icon / link → open modal (not on cart.html itself)
+      if (!window.location.pathname.endsWith("cart.html")) {
+        const cartLink = e.target.closest('a[href="cart.html"]');
+        if (cartLink) { e.preventDefault(); openOrderModal(); return; }
+      }
+      // Checkout link → open modal
       const checkoutLink = e.target.closest('a[href="chackout.html"]');
       if (checkoutLink) { e.preventDefault(); openOrderModal(); }
     });
@@ -502,23 +581,27 @@ Follow up to confirm delivery & payment.
    * ───────────────────────────────────────── */
   function boot() {
     injectStyles();
-    initFilters();        // only affects pages with tab-1…tab-5
+    initFilters();
     initSearch();
-    initCartBadge();
+    initCartBadge();      // tags badges AND sets count immediately
     injectOrderModal();
     initCartEvents();
-    updateCartBadge();
+    initWhatsAppButtons();
+    updateCartBadge();    // second call just to be safe
  
-    // ── Expose global API for shop-detail.html ──
+    // Expose global API
     window.BORAHAE = {
       PRODUCTS,
-      addToCartQty: addToCart,   // addToCart(id, qty)
+      addToCartQty: addToCart,
       openOrderModal,
+      buildWhatsAppLink,
     };
   }
  
-  document.readyState === "loading"
-    ? document.addEventListener("DOMContentLoaded", boot)
-    : boot();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
  
-})();
+}());
