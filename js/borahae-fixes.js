@@ -9,7 +9,7 @@
    * ───────────────────────────────────────── */
   const PRODUCTS = [
     // ── Core catalogue (used by shop/shop-detail/filters) ──
-    { id: 1,  category: "water-bottles", name: "Branded Frosted Mugs",      desc: "Elegant matte finish, customized messages & high quality prints", price: 1500, img: "img/mg2.jpeg" },
+    { id: 1,  category: "water-bottles", name: "Branded Clear Mugs",      desc: "Elegant matte finish, customized messages & high quality prints", price: 1000, img: "img/mg2.jpeg" },
     { id: 2,  category: "water-bottles", name: "Stanley Mugs",              desc: "Get your branded/plain Stanley mugs for the vibe",               price: 2800, img: "img/mg30.jpg" },
     { id: 3,  category: "water-bottles", name: "Thermal Flask",             desc: "Keep your drinks hot or cold with our premium Thermal Flasks",   price: 1500, img: "img/mg33.png" },
     { id: 4,  category: "water-bottles", name: "Steel Tumblers",            desc: "Keep your drinks cold with our premium Steel Tumblers",          price: 1800, img: "img/mg32.jpg" },
